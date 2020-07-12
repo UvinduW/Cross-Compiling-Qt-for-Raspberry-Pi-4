@@ -88,7 +88,7 @@ A menu should pop up on your terminal
 ### 2.1 Enable SSH
 To enable SSH, go to:
 
-	Interfacing Options -> P2 SSH
+	Interfacing Options -> P2 SSH -> Yes
 	
 Press Enter/Return to enable it
 
