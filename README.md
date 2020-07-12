@@ -11,7 +11,7 @@ This guide documents the steps I followed to corss-compile Qt 5.15.0 for the Ras
 ## Set up as tested:
 **Hardware**  
 Host: Ryzen 5 3600 + 16 GB RAM + RTX 2070 Super  
-Target: Raspberry Pi 4B (2020 production year)
+Target: Raspberry Pi 4 Model B Rev 1.2 (2020 production year)
 
 **Software**  
 Host: Ubuntu 20.04 LTS 64-bit (Running in VMWare Player within Windows 10)  
