@@ -3,10 +3,10 @@
 I have often faced issues compiling Qt for Raspberry Pis in the past. With every update to the software and hardware, the instructions that were written for an older version seem to become slightly broken with the new version. 
 When compiling the source directly on the Pi, it can take a long time to realise an issue even occured, due to the slower CPU.
 
-After a failed attempt trying to compile natively on the Raspberry Pi, I decided to focus on getting a cross compiler to work. 
-It would means that I can do all the CPU intensive work directly on my PC and I can also fail faster, speeding up my ability to find and troubleshoot issues.
+After a failed attempt trying to compile natively on the new Raspberry Pi 4, I decided to focus on getting a cross compiler to work. 
+It would mean that I can do all the CPU intensive work directly on my PC and I can also fail faster, speeding up my ability to find and troubleshoot issues.
 
-This guide documents the steps I followed to corss-compile Qt 5.15.0 for the Raspberry Pi 4B. Hope it might be useful to anyone else wanting to achieve something similar. If you do spot any errors or redundant/unnecessary steps, please do let me know.
+This guide documents the steps I followed to corss-compile Qt 5.15.0 for the Raspberry Pi 4B. Hope it might be useful to anyone else wanting to achieve something similar. If you spot any errors or redundant/unnecessary steps, please do let me know.
 
 ## Set up as tested:
 **Hardware**  
@@ -19,8 +19,9 @@ Target: Raspberry Pi OS (32-bit) Release: 2020-05-27
 Cross Compiler: gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf  
 
 **Other Notes**  
-Virtual Machine: VMWare Player configured with 4 CPU Cores + 8GB RAM + Virtualisation Engine for CPU was not enabled  
-Storage Requirements: The build directory within Ubuntu was around 8.1 GB once the whole process was complete
+Virtual Machine: VMWare Player configured with 4 CPU Cores + 8GB RAM + Virtualisation Engine for CPU disabled  
+Storage Requirements: The build directory within Ubuntu was around 8.1 GB once the whole process was complete  
+Networking: Your Raspberry Pi REQUIRES internet access to follow these instructions. It will also need to be on the same network as the host PC
 
 ## Achnowledgements
 This guide is heavily based on the one published for Qt 14.1 by Walter Prechtl from INTERELECTRONIX found here:
@@ -34,11 +35,13 @@ I also used the following guides for reference:
 And many thanks to [Oliver Wilkins](https://github.com/oliverwilkins) for his guidance and support!
 
 ## Step 1: Download the Raspberry Pi OS image
-- I used the desktop version, but you could also use the minimal version
+I downloaded the image and prepared the SD card on my Windows machine. There are a few steps to do here:
+- Download the Raspberry Pi OS image from the Raspbian Foundation. I used the May 2020 version which was the latest as of writing.
+	- Version I used: https://downloads.raspberrypi.org/raspios_full_armhf/images/raspios_full_armhf-2020-05-28/2020-05-27-raspios-buster-full-armhf.zip
+	- Latest version: https://downloads.raspberrypi.org/raspios_full_armhf_latest
+- Note the above links are for the desktop version bundled with all the recommended software. You can also use the standard desktop version, or even the minimal version if you prefer
 - Flash the image onto an SD card (I used Balena Etcher)
-- I wanted to set up my Raspberry Pi to be accessible remotely so I set up WiFi and SSH as well
-
-(NOTE: Your Raspberry Pi REQUIRES internet access to follow these instructions)
+- I wanted to set up my Raspberry Pi to be accessible remotely so I set up WiFi and SSH as well directly on the SD card after flashing as described below
 
 ### 1.1 Set up WiFi
 With the SD card connected to your computer, create a new file called `wpa_supplicant.conf`  
@@ -62,7 +65,7 @@ The file should have the following contents:
 		priority = 1
 	}	
 	
-Modify the contents of the network block to match that of your WiFi connection. You can add as many network blocks as you would like.
+Modify the contents of the network block to match that of your WiFi connection. You can add as many network blocks as you would like, if you want the device to be able to automatically connect to one of many networks. I left the template to allow for two networks.  
 Use the priority value to select which network the RPi should prioritise if multiple are visible. Higher number = higher priority
 
 ### 1.2 Set up SSH
@@ -70,7 +73,7 @@ I wanted the ability to SSH into the Pi straight away. To enable ssh, simply cre
 
 On my desktop, I used `kitty` (a popular fork of  `putty`) to SSH into the RPi. If you're doing it within the virtual machine, you can also use Ubuntu's built in SSH capability directly from any terminal.
 
-Now the SD card can be inserted into the RPi  
+Now the SD card can be inserted into the RPi.  
 
 If you aren't planning on connecting a monitor and keyboard, you can use your network router's interface to figure out what the IP address of the RPi is.
 
@@ -106,7 +109,7 @@ You need to edit your sources list to enable development sources. To do this, en
 
 	sudo nano /etc/apt/sources.list
 	
-In the nano text editor, uncomment the following line by removing the `#` charachter (the line should exist already, if not then add it):
+In the nano text editor, uncomment the following line by removing the `#` character (the line should exist already, if not then add it):
 
 	deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
 	
@@ -156,13 +159,13 @@ Run the following commands in terminal to install the required packages
 	sudo apt-get build-dep libqt5webkit5
 	sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0 gdbserver
 	
-At this stage I made a backup of my SD card image using `Win32DiskImager` so that I can easily rever to this state if something later on broke the installation.
+At this stage I made a backup of my SD card image using `Win32DiskImager` so that I can easily revert to this state if something later on broke the installation.
 	
 ### 2.7 Optional packages for multimedia (can be done later as well)
 
 You can install these packages if you want multimedia or bluetooth capability.  
 
-I RECOMMEND SKIPPING THIS STEP FOR NOW AND COMPLETING IT LATER. I HAVE WRITTEN WHEN TO INSTALL THESE LIBRARIES AND THE PROCEDURE I FOLLOWED A FEW SECTIONS BELOW.  
+**I recommend skipping this step for now and completing it later. I have specified when to install these libraries and the procedure I followed in section 4.5 below.**  
 
 It should be noted that I initially had issues configuring my build of Qt with these packages installed. Initially I installed all these libraries in one go but ran into trouble later. I then installed them one-by-one in a specific order through trial-and-error and that seemed to resolve the issue. This is the order I installed them in:
 
@@ -184,7 +187,7 @@ This is where the built Qt sources will be deployed to on the Rasberry Pi. Run t
 This guide assumes that you have Ubuntu 20.04 already installed on your machine, either natively or running within a virtual machine.
 
 ### 3.1 Update the PC
-Run the following to update your system and installed some needed dependancies:
+Run the following to update your system and install some needed dependancies:
 
 	sudo apt-get update
 	sudo apt-get upgrade
@@ -259,7 +262,7 @@ Let's move back into the rpi folder as needed for the next sections:
 	
 ### 4.3 Sync our sysroot
 We now need to sync up our sysroot folder with the system files from the Raspberry Pi. The sysroot folder will then have all the necessary files to run a system, and therefore also compile for that system.
-rsync will let us sync any changes we make on the Raspberry Pi with our PC and vice versa as well.
+rsync will let us sync any changes we make on the Raspberry Pi with our PC and vice versa as well. It is convenient because if you make changes to your RPi later and want to update the sysroot folder on your host machine, rsync will only copy over the changes, potentially saving a lot of time.
 
 For now, we want to sync (i.e. copy) over all the relevant files from the RPi. To do this, enter the following commands [change *192.168.1.7* with the IP address for your RPi]:
 
@@ -273,7 +276,7 @@ You can run any of those lines again as much as you want if you want to check th
 
 The `--rsync-path="sudo rsync"` option allows us to access files on the target system (RPi) that may require elevated rights. The rsync configuration changes we made on the RPi itself is what allowed us to use this flag.  
 
-The `--delete` option will delete any files from our host system if they have also been deleted on the RPi. You can probably ommit this but I used it as I was troubleshooting library install issues on the RPi.
+The `--delete` option will delete any files from our host system if they have also been deleted on the RPi. You can probably omit this but I used it as I was troubleshooting library install issues on the RPi.
 
 ### 4.4 Fix symbolic links
 The files we copied in the previous step still have symbolic links pointing to the file system on the Raspberry Pi. We need to alter this so that they become relative links from the new sysroot directory on the host machine.
@@ -295,7 +298,7 @@ In the Raspberry Pi configuration steps (step 2.7), I mentioned a list of librar
 4. Hopefully there won't be any issues with it. If there are, then you have a problem elsewhere. Let's assume there were no problems.
 5. Now go on the **Raspberry Pi** and install the first library running the following command:
 	-  `sudo apt-get install gstreamer1.0-plugins*`
-6. Now run the commands given above again to sync the sysroot and fix symbolic links. Ensure you are running them from the ~/rpi directory (and not the build directory)
+6. Now run the commands given above again to sync the sysroot and fix symbolic links (section 4.3 & 4.4). Ensure you are running them from the ~/rpi directory (and not the build directory)
 7. Go to the next section below and run the configure command
 8. Check that there aren't any issues in the configuration output. Let's assume that everything is okay
 9. Now repeat steps 5-8 again but everytime you do step 5, change the library being installed appropriately. Do them in the following order (as that's what I happened to do and worked for me):
@@ -341,7 +344,7 @@ QPA backends:
 </code></pre>  
 
 If the your configuration summary doesn't have the EGLFS features set to what's shown above, something has probably gone wrong. You can look at the config.log file in the build directory to try and diagnose what the issue might be.
-If you see an error at the bottom of your config summary along the lines of "EGLFS was enabled but...." that could also be an indication something went wrong. Look through the config files to try and diagnose the error.
+If you see an error at the bottom of your config summary along the lines of "EGLFS was enabled but...." that could also be an indication something went wrong. Look through the config.log files to try and diagnose the error.  
 You may get a warning about QDoc not being compiled. This can be safely ignored unless you specifically need this.
 
 If you have any issues, before running configure again, delete the current contents with the following command (save a copy of config.log first if you need to):
@@ -354,7 +357,7 @@ I've skipped QtScripts as this library is being depracated and it is probably be
 If you are building QtMultimedia and following my steps in the previous section, this is the point where you go back and install the next library you need on the RPi. That is assuming that the configure summary looked okay and doesn't indicate any issues.  
 As you install the libraries, you should be able to see different features become enabled (set to "yes") on the configure summary under Multimedia and Bluetooth.
 
-If all looks good and all libraries you need have been installed we can continue to the next section/
+If all looks good and all libraries you need have been installed we can continue to the next section
 
 ### 4.7 Build Qt
 Our build has been configured now, and it is time to actually build the source files. Ensure you are still in the build directory, and run the following command:
@@ -428,7 +431,7 @@ Now run the compiled executable that we copied over from the host machine:
 The demo should start running on the display connected to the Raspberry Pi.
 
 ## Step 6: Windowed vs Full Screen Mode
-In previous builds of Qt I've used on a Raspberry Pi, the apps I developed ran on the frame buffer directly, bypassing the X window manager. This also meant that the apps always ran full screen. 
+In previous builds of Qt I've used on a Raspberry Pi, the apps I developed ran on the frame buffer directly, bypassing the X Window Manager. This also meant that the apps always ran full screen. 
 I have found that this is not the case with this build of Qt.  
 
 If I boot into the desktop mode and launch the app, it will run in windowed mode. This does have the benefit of being able to VNC into the Raspberry Pi and view what the result looks like.   
