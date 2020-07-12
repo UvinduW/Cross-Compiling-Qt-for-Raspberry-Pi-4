@@ -31,7 +31,7 @@ I also used the following guides for reference:
 - https://mechatronicsblog.com/cross-compile-and-deploy-qt-5-12-for-raspberry-pi/  
 - https://www.tal.org/tutorials/building-qt-512-raspberry-pi
 
-And many thanks to Oliver Wilkins for his guidance and support!
+And many thanks to [Oliver Wilkins](https://github.com/oliverwilkins) for his guidance and support!
 
 ## Step 1: Download the Raspberry Pi OS image
 - I used the desktop version, but you could also use the minimal version
@@ -97,7 +97,7 @@ To enable Fake KMS, from the root `raspi-config` menu, go to:
 
 	Advanced Options -> A8 GL Driver -> G2 GL (Fake KMS)
 	
-That should enable KMS. If you are using a minimal build, you may be prompted to download some updates before this option becomes. If asked, do so.
+That should enable KMS. If you are using a minimal build, you may be prompted to download some updates before this option becomes available. If asked, do so.
 
 That is all we need to configure in `raspi-config`
 
