@@ -106,7 +106,7 @@ You need to edit your sources list to enable development sources. To do this, en
 
 	sudo nano /etc/apt/sources.list
 	
-In the nano text editor, uncomment the following line (it should exist already, if not then add it):
+In the nano text editor, uncomment the following line by removing the `#` charachter (the line should exist already, if not then add it):
 
 	deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
 	
