@@ -434,9 +434,15 @@ The demo should start running on the display connected to the Raspberry Pi.
 In previous builds of Qt I've used on a Raspberry Pi, the apps I developed ran on the frame buffer directly, bypassing the X Window Manager. This also meant that the apps always ran full screen. 
 I have found that this is not the case with this build of Qt.  
 
-If I boot into the desktop mode and launch the app, it will run in windowed mode. This does have the benefit of being able to VNC into the Raspberry Pi and view what the result looks like.   
+If I boot into the desktop mode and launch the app, it will run in windowed mode. This does have the benefit of being able to VNC into the Raspberry Pi and view what the result looks like.
 
 However, if you want it to bypass the X Window Manager, the only solution I have found so far is to boot the RPi directly into CLI. This way the X Window Manager is not running, and the app runs full screen when launched.
+
+[Pablojr has pointed out](https://github.com/UvinduW/Cross-Compiling-Qt-for-Raspberry-Pi-4/issues/2) that you can access the app through VNC even when you're in command line mode by adding the `-platform vnc` flag when launching it, like this:
+
+	./qopenglwidget -platform vnc
+
+For this to work, you first need to disable the Raspberry Pi's built in VNC server through `raspi-config`. I did run into issues with applications which use OpenGL components (such as the example above), where the OpenGL graphics fail to render.
 
 ## Step 7: Configuring Qt Creator
 Currently I develop my Qt apps on a Windows Machine. Therefore it doesn't have access to the cross-compiler directly. I simply copy my project source files from my Windows environment to the Ubuntu environment inside the Virtual Machine, and then run `qmake` and `make` to compile the code.
