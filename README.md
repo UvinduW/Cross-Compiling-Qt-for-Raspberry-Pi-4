@@ -389,7 +389,7 @@ You should now see a new folder named "qt5.15" here. Copy this to the raspberry 
 
 Enter the following command to update the device letting the linker to find the new Qt library files:
 
-	echo /usr/local/qt5pi/lib | sudo tee /etc/ld.so.conf.d/qt5pi.conf
+	echo /usr/local/qt5.15/lib | sudo tee /etc/ld.so.conf.d/qt5.15.conf
 	sudo ldconfig
 
 The Qt wiki for installing on a Raspberry Pi 2 suggests the following:
