@@ -269,6 +269,7 @@ For now, we want to sync (i.e. copy) over all the relevant files from the RPi. T
 	rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.1.7:/lib sysroot
 	rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.1.7:/usr/include sysroot/usr
 	rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.1.7:/usr/lib sysroot/usr
+	rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.1.7:/usr/local/qt5.15 sysroot/usr/local
 	rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.1.7:/opt/vc sysroot/opt
 
 Note: Double check after each of the above commands that all the files have been copied. There will be an information message if there were any issues. 
