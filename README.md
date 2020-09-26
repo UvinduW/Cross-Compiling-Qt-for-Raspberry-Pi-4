@@ -56,13 +56,13 @@ The file should have the following contents:
 	network={
 		ssid="NETWORK-NAME"
 		psk="NETWORK-PASSWORD"
-		priority = 2
+		priority=2
 	}
 	
 	network={
 		ssid="SECOND-NETWORK-NAME"
 		psk="SECOND-NETWORK-PASSWORD"
-		priority = 1
+		priority=1
 	}	
 	
 Modify the contents of the network block to match that of your WiFi connection. You can add as many network blocks as you would like, if you want the device to be able to automatically connect to one of many networks. I left the template to allow for two networks.  
