@@ -20,6 +20,7 @@ Cross Compiler: gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf
 
 **Other Notes**  
 Virtual Machine: VMWare Player configured with 4 CPU Cores + 8GB RAM + Virtualisation Engine for CPU disabled  
+WSL: These instructions have been tested on Windows Subsystem for Linux (WSL) and have worked perfectly (Ubuntu 20.04). This can be faster than dealing with a VM.
 Storage Requirements: The build directory within Ubuntu was around 8.1 GB once the whole process was complete  
 Networking: Your Raspberry Pi REQUIRES internet access to follow these instructions. It will also need to be on the same network as the host PC
 
